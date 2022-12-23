@@ -1,32 +1,36 @@
 #pragma once
 
-#include "core.h"
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
-#include <memory>
+#pragma warning(push, 0)
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
+#pragma warning(pop)
 
-namespace Thsan {
-	class THSAN_API Log 
-	{
-	public:
-		static void init();
-		inline static std::shared_ptr<spdlog::logger>& getCoreLogger() { return s_coreLogger;  }
-		inline static std::shared_ptr<spdlog::logger>& getClientLogger() { return s_clientLogger;  }
-	private:
-		static std::shared_ptr<spdlog::logger> s_coreLogger;
-		static std::shared_ptr<spdlog::logger> s_clientLogger;
+#define CORE_DEFAULT_LOGGER_NAME "THSAN"
+#define CLIENT_DEFAULT_LOGGER_NAME "CLIENT"
 
-	};
-};
 
-#define TS_CORE_TRACE(...) ::Thsan::Log::getCoreLogger()->trace(__VA_ARGS__)
-#define TS_CORE_INFO(...)  ::Thsan::Log::getCoreLogger()->info(__VA_ARGS__)
-#define TS_CORE_WARN(...)  ::Thsan::Log::getCoreLogger()->warn(__VA_ARGS__)
-#define TS_CORE_ERROR(...) ::Thsan::Log::getCoreLogger()->error(__VA_ARGS__)
-#define TS_CORE_CRITICAL(...) ::Thsan::Log::getCoreLogger()->critical(__VA_ARGS__)
+#ifdef TS_CONFIG_DEBUG
+	#define TS_CORE_TRACE(...)	  if(spdlog::get(CORE_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CORE_DEFAULT_LOGGER_NAME)->trace(__VA_ARGS__);}
+	#define TS_CORE_INFO(...)	  if(spdlog::get(CORE_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CORE_DEFAULT_LOGGER_NAME)->info(__VA_ARGS__);}
+	#define TS_CORE_WARN(...)	  if(spdlog::get(CORE_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CORE_DEFAULT_LOGGER_NAME)->warn(__VA_ARGS__);}
+	#define TS_CORE_ERROR(...)	  if(spdlog::get(CORE_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CORE_DEFAULT_LOGGER_NAME)->error(__VA_ARGS__);}
+	#define TS_CORE_CRITICAL(...) if(spdlog::get(CORE_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CORE_DEFAULT_LOGGER_NAME)->critical(__VA_ARGS__);}
 
-#define TS_CLIENT_TRACE(...) ::Thsan::Log::getClientLogger()->trace(__VA_ARGS__)
-#define TS_CLIENT_INFO(...)  ::Thsan::Log::getClientLogger()->info(__VA_ARGS__)
-#define TS_CLIENT_WARN(...)  ::Thsan::Log::getClientLogger()->warn(__VA_ARGS__)
-#define TS_CLIENT_ERROR(...) ::Thsan::Log::getClientLogger()->error(__VA_ARGS__)
-#define TS_CLIENT_CRITICAL(...) ::Thsan::Log::getClientLogger()->critical(__VA_ARGS__)
+	#define TS_CLIENT_TRACE(...)	if(spdlog::get(CLIENT_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CLIENT_DEFAULT_LOGGER_NAME)->trace(__VA_ARGS__);}
+	#define TS_CLIENT_INFO(...)		if(spdlog::get(CLIENT_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CLIENT_DEFAULT_LOGGER_NAME)->info(__VA_ARGS__);}
+	#define TS_CLIENT_WARN(...)		if(spdlog::get(CLIENT_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CLIENT_DEFAULT_LOGGER_NAME)->warn(__VA_ARGS__);}
+	#define TS_CLIENT_ERROR(...)	if(spdlog::get(CLIENT_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CLIENT_DEFAULT_LOGGER_NAME)->error(__VA_ARGS__);}
+	#define TS_CLIENT_CRITICAL(...) if(spdlog::get(CLIENT_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(CLIENT_DEFAULT_LOGGER_NAME)->critical(__VA_ARGS__);}
+#else
+	#define TS_CORE_TRACE(...)    (void)0 
+	#define TS_CORE_WARN(...)     (void)0 
+	#define TS_CORE_ERROR(...)    (void)0 
+	#define TS_CORE_INFO(...)     (void)0 
+	#define TS_CORE_CRITICAL(...) (void)0 
+
+	#define TS_CLIENT_TRACE(...)    (void)0
+	#define TS_CLIENT_INFO(...)     (void)0
+	#define TS_CLIENT_WARN(...)     (void)0
+	#define TS_CLIENT_ERROR(...)    (void)0
+	#define TS_CLIENT_CRITICAL(...) (void)0
+#endif

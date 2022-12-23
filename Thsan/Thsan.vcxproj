@@ -11,15 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\thsan\log.h" />
+    <ClInclude Include="src\thsan\manager\log_manager.h" />
     <ClInclude Include="src\thsan\entry_point.h" />
     <ClInclude Include="src\thsan\core.h" />
     <ClInclude Include="src\thsan\game.h" />
     <ClInclude Include="src\thsan.h" />
+    <ClInclude Include="src\tspch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\thsan\game.cpp" />
-    <ClCompile Include="src\thsan\log.cpp" />
+    <ClCompile Include="src\thsan\log.h" />
+    <ClCompile Include="src\thsan\manager\log_manager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -68,15 +70,19 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_BUILD_DLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_BUILD_DLL;TS_CONFIG_DEBUG;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\SandBox\" /Y /I
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -84,9 +90,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_BUILD_DLL;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_BUILD_DLL;TS_CONFIG_RELEASE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -95,6 +101,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\SandBox\" /Y /I
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
