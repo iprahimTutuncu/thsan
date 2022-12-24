@@ -9,6 +9,7 @@ extern Thsan::Game* Thsan::create_game();
 int main(int argc, char** argv) {
 	auto app = Thsan::create_game();
 	app->run();
+	app->close();
 	delete app;
 	return 0;
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include "core.h"
 #include "manager/log_manager.h"
+#include "window.h"
+
 namespace Thsan {
 	class THSAN_API Game
 	{
@@ -14,6 +16,7 @@ namespace Thsan {
 	private:
 		//Managers
 		LogManager logManager;
+		Window window;
 	};
 
 	Game* create_game();

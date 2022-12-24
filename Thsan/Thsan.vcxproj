@@ -16,12 +16,14 @@
     <ClInclude Include="src\thsan\core.h" />
     <ClInclude Include="src\thsan\game.h" />
     <ClInclude Include="src\thsan.h" />
+    <ClInclude Include="src\thsan\window.h" />
     <ClInclude Include="src\tspch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\thsan\game.cpp" />
     <ClCompile Include="src\thsan\log.h" />
     <ClCompile Include="src\thsan\manager\log_manager.cpp" />
+    <ClCompile Include="src\thsan\window.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -73,11 +75,13 @@
       <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_BUILD_DLL;TS_CONFIG_DEBUG;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\sdl2\include;$(SolutionDir)Thsan\vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Thsan\vendor\sdl2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\SandBox\" /Y /I
@@ -93,13 +97,15 @@
       <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_BUILD_DLL;TS_CONFIG_RELEASE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\sdl2\include;$(SolutionDir)Thsan\vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Thsan\vendor\sdl2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\SandBox\" /Y /I

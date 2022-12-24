@@ -20,6 +20,7 @@
       <Filter>thsan</Filter>
     </ClInclude>
     <ClInclude Include="src\tspch.h" />
+    <ClInclude Include="src\thsan\window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\thsan\game.cpp">
@@ -29,5 +30,6 @@
       <Filter>thsan</Filter>
     </ClCompile>
     <ClCompile Include="src\thsan\log.h" />
+    <ClCompile Include="src\thsan\window.cpp" />
   </ItemGroup>
 </Project>
