@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "window.h"
 #include "SDL.h"
 #include "log.h"
@@ -36,12 +37,38 @@ namespace Thsan {
 	}
 	void Window::pollEvent()
 	{
-
+		/*
 		SDL_Event e;
 		while (SDL_PollEvent(&e))
 		{
 			if (e.type == SDL_QUIT)
 				quit();
+		}
+		*/
+
+		SDL_Event event;
+
+		SDL_PumpEvents();
+
+		while (SDL_PeepEvents(&event, 1, SDL_GETEVENT, SDL_QUIT, SDL_WINDOWEVENT) > 0)
+
+		{
+			switch (event.type)
+			{
+			case SDL_QUIT:
+				quit();
+			case SDL_APP_TERMINATING:
+			case SDL_WINDOWEVENT:
+				if (event.window.event == SDL_WINDOWEVENT_RESIZED)
+				{
+					//sdl->g_resized = true;
+					//sdl->g_new_width = event.window.data1;
+					//sdl->g_new_height = event.window.data2;
+				}
+				break;
+			default:
+				break;
+			}
 		}
 	}
 	void Window::update()
@@ -53,3 +80,5 @@ namespace Thsan {
 		running = false;
 	}
 }
+
+#include "../pch.h"

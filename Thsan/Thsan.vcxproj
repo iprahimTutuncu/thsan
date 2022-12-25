@@ -11,18 +11,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\thsan\event\event.h" />
+    <ClInclude Include="src\thsan\keyboard.h" />
+    <ClInclude Include="src\thsan\key_code.h" />
     <ClInclude Include="src\thsan\manager\log_manager.h" />
     <ClInclude Include="src\thsan\entry_point.h" />
     <ClInclude Include="src\thsan\core.h" />
     <ClInclude Include="src\thsan\game.h" />
     <ClInclude Include="src\thsan.h" />
     <ClInclude Include="src\thsan\window.h" />
-    <ClInclude Include="src\tspch.h" />
+    <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\thsan\game.cpp" />
+    <ClCompile Include="src\thsan\keyboard.cpp" />
     <ClCompile Include="src\thsan\log.h" />
     <ClCompile Include="src\thsan\manager\log_manager.cpp" />
+    <ClCompile Include="src\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\thsan\window.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -75,7 +83,9 @@
       <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_BUILD_DLL;TS_CONFIG_DEBUG;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\sdl2\include;$(SolutionDir)Thsan\vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\sdl2\include;$(SolutionDir)Thsan\vendor\spdlog\include;C:\dev\Thsan\Thsan\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -97,7 +107,9 @@
       <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_BUILD_DLL;TS_CONFIG_RELEASE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\sdl2\include;$(SolutionDir)Thsan\vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\sdl2\include;$(SolutionDir)Thsan\vendor\spdlog\include;C:\dev\Thsan\Thsan\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

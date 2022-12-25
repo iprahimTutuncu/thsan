@@ -1,5 +1,4 @@
 #pragma once
-
 #include "thsan/game.h"
 
 // ENTRY POINT

@@ -19,8 +19,11 @@
     <ClInclude Include="src\thsan\manager\log_manager.h">
       <Filter>thsan</Filter>
     </ClInclude>
-    <ClInclude Include="src\tspch.h" />
+    <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\thsan\window.h" />
+    <ClInclude Include="src\thsan\keyboard.h" />
+    <ClInclude Include="src\thsan\event\event.h" />
+    <ClInclude Include="src\thsan\key_code.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\thsan\game.cpp">
@@ -31,5 +34,7 @@
     </ClCompile>
     <ClCompile Include="src\thsan\log.h" />
     <ClCompile Include="src\thsan\window.cpp" />
+    <ClCompile Include="src\thsan\keyboard.cpp" />
+    <ClCompile Include="src\pch.cpp" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 #pragma once
-
-#include "../core.h"
+#include "pch.h"
+#include "thsan/core.h"
 
 namespace Thsan {
 	class THSAN_API LogManager 

@@ -1,11 +1,14 @@
+#include "pch.h"
 #include "Game.h"
 #include "log.h"
+#include "keyboard.h"
 #include "SDL.h"
 
 namespace Thsan {
 
 
-	Game::Game()
+	Game::Game():
+		isInit{false}
 	{
 	}
 
@@ -15,30 +18,36 @@ namespace Thsan {
 
 	bool Game::init()
 	{
-		logManager.init();
-		getInfo();
+		TS_CORE_ASSERT(!isInit, "Game is already initialized, attemp of calling Game::init() more than once is a bad idea, call Game::close() before if you really need to frl.");
+		if (!isInit) {
+			logManager.init();
+			Keyboard::init();
+			getInfo();
 
-		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-			TS_CORE_ERROR("error initiliazing SDL2: {}", SDL_GetError());
-			return false;
+			if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+				TS_CORE_ERROR("error initiliazing SDL2: {}", SDL_GetError());
+				return false;
+			}
+
+			SDL_version version;
+			SDL_VERSION(&version);
+			TS_CORE_TRACE("SDL {}.{}.{}", version.major, version.minor, version.patch);
+
+			if (!window.create())
+				return false;
+
+			isInit = true;
 		}
-
-		SDL_version version;
-		SDL_VERSION(&version);
-		TS_CORE_TRACE("SDL {}.{}.{}", version.major, version.minor, version.patch);
-
-		if (!window.create())
-			return false;
 
 		return true;
 	}
 
 	void Game::run() {
-
 		if (init()) {
 			while (window.isRunning()) {
 				window.pollEvent();
 				window.update();
+				Keyboard::update();
 			}
 
 			window.close();
@@ -50,6 +59,7 @@ namespace Thsan {
 	{
 		logManager.close();
 		SDL_Quit();
+		isInit = false;
 		return true;
 	}
 

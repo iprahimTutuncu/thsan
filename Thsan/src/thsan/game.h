@@ -1,4 +1,5 @@
 #pragma once
+
 #include "core.h"
 #include "manager/log_manager.h"
 #include "window.h"
@@ -14,6 +15,7 @@ namespace Thsan {
 		bool close();
 		void getInfo();
 	private:
+		bool isInit{false};
 		//Managers
 		LogManager logManager;
 		Window window;

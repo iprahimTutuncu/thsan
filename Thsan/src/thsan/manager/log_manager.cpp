@@ -1,8 +1,7 @@
+#include "pch.h"
 #include "log_manager.h"
-
-
 #include "spdlog/sinks/stdout_color_sinks.h"
-#include "../log.h"
+#include "thsan/log.h"
 
 namespace Thsan {
 

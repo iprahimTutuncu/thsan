@@ -1,5 +1,5 @@
 #pragma once
-
+#include "pch.h"
 #include "game.h"
 #include "log.h"
 
