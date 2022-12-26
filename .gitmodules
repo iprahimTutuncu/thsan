@@ -1,6 +1,3 @@
-[submodule "Thsanvendorspdlog"]
-	path = Thsanvendorspdlog
-	url = https://github.com/gabime/spdlog
 [submodule "Thsan/vendor/spdlog"]
 	path = Thsan/vendor/spdlog
 	url = https://github.com/gabime/spdlog
