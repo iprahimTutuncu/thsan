@@ -1,3 +1,6 @@
 [submodule "Thsan/vendor/spdlog"]
 	path = Thsan/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "Thsan/vendor/imgui"]
+	path = Thsan/vendor/imgui
+	url = https://github.com/ocornut/imgui.git
