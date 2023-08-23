@@ -1,84 +1,59 @@
 #include "pch.h"
+
 #include "window.h"
 #include "SDL.h"
 #include "log.h"
 
+#include <GL/glew.h>
+#include <SDL_vulkan.h>
+#include <vulkan/vulkan.hpp>
+
+#include "thsan/graphics/graphic_api.h"
+#include "thsan/graphics/framebuffer.h"
+#include "thsan/game.h"
+
+#include "thsan/Input/event.h"
+
+#ifdef _WIN32
+#pragma comment(linker, "/subsystem:windows")
+#define VK_USE_PLATFORM_WIN32_KHR
+#define PLATFORM_SURFACE_EXTENSION_NAME VK_KHR_WIN32_SURFACE_EXTENSION_NAME
+#endif
+
+
+
 namespace Thsan {
 
-	Window::Window(): window(nullptr)
+	bool Window::setGraphicAPI(GraphicAPI api)
 	{
+		bool success = true;
 
-	}
+		if (graphicAPI == api)
+			return true;
 
-	Window::~Window()
-	{
-		if (window)
-			close();
-	}
 
-	bool Window::create()
-	{
-		window = SDL_CreateWindow("my application", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 728, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-		if (!window) {
-			TS_CORE_ERROR("Error creating window: {}", SDL_GetError());
-			return false;
+		if (graphicAPI == GraphicAPI::openGL)
+			destroyContextOpenGL();
+		else if (graphicAPI == GraphicAPI::vulkan)
+			destroyContextVulkan();
+
+
+		graphicAPI = api;
+
+		if (graphicAPI == GraphicAPI::openGL)
+			createContextOpenGL();
+		else if (graphicAPI == GraphicAPI::vulkan)
+			createContextVulkan();
+		else if (graphicAPI == GraphicAPI::none) {
+			TS_CORE_ERROR("error: In Window::setGraphicAPI,  no graphic API specified");
+			success = false;
 		}
-		return true;
-	}
-	bool Window::close()
-	{
-		SDL_DestroyWindow(window);
-		window = nullptr;
-		return true;
-	}
-	bool Window::isRunning()
-	{
-		return running;
-	}
-	void Window::pollEvent()
-	{
-		/*
-		SDL_Event e;
-		while (SDL_PollEvent(&e))
-		{
-			if (e.type == SDL_QUIT)
-				quit();
+		else {
+			TS_CORE_ERROR("error: In Window::setGraphicAPI, graphic API is unknown");
+			success = false;
 		}
-		*/
 
-		SDL_Event event;
 
-		SDL_PumpEvents();
-
-		while (SDL_PeepEvents(&event, 1, SDL_GETEVENT, SDL_QUIT, SDL_WINDOWEVENT) > 0)
-
-		{
-			switch (event.type)
-			{
-			case SDL_QUIT:
-				quit();
-			case SDL_APP_TERMINATING:
-			case SDL_WINDOWEVENT:
-				if (event.window.event == SDL_WINDOWEVENT_RESIZED)
-				{
-					//sdl->g_resized = true;
-					//sdl->g_new_width = event.window.data1;
-					//sdl->g_new_height = event.window.data2;
-				}
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	void Window::update()
-	{
-		SDL_UpdateWindowSurface(window);
-	}
-	void Window::quit()
-	{
-		running = false;
+		return success;
 	}
 }
-
-#include "../pch.h"

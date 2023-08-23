@@ -5,8 +5,6 @@
 
 namespace Thsan {
 
-
-
 		/*
 		spdlog::set_pattern("[%H:%M:%S %z] [%n] [%^---%L---%$] [thread %t] %v");
 
@@ -17,22 +15,22 @@ namespace Thsan {
 		s_clientLogger->set_level(spdlog::level::trace);
 		*/
 
-
 	void LogManager::init()
 	{
 		auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
 		console_sink->set_pattern("[%Y-%m-%d %H:%M:%S] [%n] [%^---%L---%$] [thread %t] %v");
-
 		std::vector<spdlog::sink_ptr> sinks{ console_sink };
+
 		auto logger = std::make_shared<spdlog::logger>(CORE_DEFAULT_LOGGER_NAME, sinks.begin(), sinks.end());
 		logger->set_level(spdlog::level::trace);
 		logger->flush_on(spdlog::level::trace);
+
+		spdlog::register_logger(logger);
 
 		auto logger_client = std::make_shared<spdlog::logger>(CLIENT_DEFAULT_LOGGER_NAME, sinks.begin(), sinks.end());
 		logger_client->set_level(spdlog::level::trace);
 		logger_client->flush_on(spdlog::level::trace);
 
-		spdlog::register_logger(logger);
 		spdlog::register_logger(logger_client);
 	}
 

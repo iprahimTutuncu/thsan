@@ -1,18 +1,24 @@
 #include <thsan.h>
-#include <thsan/keyboard.h>
+#include "state/cool_stuff_state.h"
 
 class SandBox : public Thsan::Game
 {
 public:
 	SandBox() {
-
-		if(!Thsan::key(TS_INPUT_KEY_B))
-			TS_CLIENT_WARN("the input B was not clicked :) ");
 	}
 
 	~SandBox() {
-
+		logManager.close();
 	}
+
+	void onCreate() override {
+		state = new CoolStuffState(this);
+	}
+
+
+private:
+	
+	
 };
 
 

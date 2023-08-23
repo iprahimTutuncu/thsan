@@ -43,6 +43,6 @@
 	#define TS_CLIENT_WARN(...)     (void)0
 	#define TS_CLIENT_ERROR(...)    (void)0
 	#define TS_CLIENT_CRITICAL(...) (void)0
-	#define TS_CORE_ASSERT(x, msg)  if ((x)) {} else {TS_CORE_CRITICAL("ASSERT - {}\n\t{}\n\tin file: {}\n\ton line: {}", x, msg, __FILE__, __LINE__)};
-	#define TS_CLIEN_ASSERT(x, msg) if ((x)) {} else {TS_CLIENT_CRITICAL("ASSERT - {}\n\t{}\n\tin file: {}\n\ton line: {}", x, msg, __FILE__, __LINE__)};
+	#define TS_CORE_ASSERT(x, msg)  if ((x)) {} else {TS_CORE_CRITICAL("ASSERT - {}\n\t{}\n\tin file: {}\n\ton line: {}", x, msg, __FILE__, __LINE__);};
+	#define TS_CLIEN_ASSERT(x, msg) if ((x)) {} else {TS_CLIENT_CRITICAL("ASSERT - {}\n\t{}\n\tin file: {}\n\ton line: {}", x, msg, __FILE__, __LINE__);};
 #endif

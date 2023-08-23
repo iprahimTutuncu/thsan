@@ -26,19 +26,19 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -78,16 +78,18 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\spdlog\include;$(SolutionDir)Thsan\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NOMINMAX;TS_PLATFORM_WINDOWS;TS_CONFIG_DEBUG;TS_CLIENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\src;$(SolutionDir)Thsan\src\vendor\spdlog\include;$(SolutionDir)Thsan\src\vendor\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\Thsan\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\" /Y /I
@@ -99,10 +101,10 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\spdlog\include;$(SolutionDir)Thsan\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\src\vendor\spdlog\include;$(SolutionDir)Thsan\src;$(SolutionDir)Thsan\src\vendor\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -119,7 +121,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_DISTRIBUTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\spdlog\include;$(SolutionDir)Thsan\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\spdlog\include;$(SolutionDir)ThsanMath\src;$(SolutionDir)Thsan\src;$(SolutionDir)Thsan\vendor\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -136,11 +138,30 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\state\cool_stuff_state.cpp" />
+    <ClCompile Include="vendor\tsm\math\basis.cpp" />
+    <ClCompile Include="vendor\tsm\math\camera\abstract_camera.cpp" />
+    <ClCompile Include="vendor\tsm\math\camera\fixed_target_camera.cpp" />
+    <ClCompile Include="vendor\tsm\math\camera\free_camera.cpp" />
+    <ClCompile Include="vendor\tsm\math\camera\target_camera.cpp" />
+    <ClCompile Include="vendor\tsm\math\transform.cpp" />
+    <ClCompile Include="vendor\tsm\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Thsan\Thsan.vcxproj">
       <Project>{03082A0E-6F1C-52BF-389E-F51EA4714EF0}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\state\cool_stuff_state.h" />
+    <ClInclude Include="vendor\tsm\math\basis.h" />
+    <ClInclude Include="vendor\tsm\math\camera\abstract_camera.h" />
+    <ClInclude Include="vendor\tsm\math\camera\fixed_target_camera.h" />
+    <ClInclude Include="vendor\tsm\math\camera\free_camera.h" />
+    <ClInclude Include="vendor\tsm\math\camera\target_camera.h" />
+    <ClInclude Include="vendor\tsm\math\transform.h" />
+    <ClInclude Include="vendor\tsm\pch.h" />
+    <ClInclude Include="vendor\tsm\tsm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
