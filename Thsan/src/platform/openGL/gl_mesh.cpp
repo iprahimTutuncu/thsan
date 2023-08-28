@@ -6,7 +6,6 @@
 
 namespace Thsan {
 	GLMesh::GLMesh(uint32_t vertexCount)
-		:Mesh(vertexCount)
 	{
 		vertices.resize(vertexCount);
 		for (uint32_t i = 0; i < vertexCount; i++)
@@ -55,6 +54,28 @@ namespace Thsan {
 	{
 		return indices.size();
 	}
+
+	void GLMesh::resize(unsigned int size) {
+		// Ensure that the requested size is greater than zero
+		if (size == 0) {
+			TS_CORE_WARN("In void GLMesh::resize(unsigned int size), size is equal to zero, should probably be greater than 0.");
+		}
+
+		vertices.clear();
+		indices.clear();
+
+		vertices.resize(size);
+
+		glDeleteBuffers(1, &vbo);
+		glGenBuffers(1, &vbo);
+
+		GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+		GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * size, nullptr, GL_STATIC_DRAW));
+		GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));
+
+		changed = true;
+	}
+
 
 	void GLMesh::bind() const
 	{

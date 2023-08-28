@@ -18,6 +18,8 @@
 #include <SDL.h>
 #include <GL/gl.h>
 
+std::chrono::duration<double> frameDuration;
+
 namespace Thsan {
 
 	LogManager Game::logManager;
@@ -59,21 +61,37 @@ namespace Thsan {
 	}
 
 	void Game::run() {
-
-
 		this->init();
-
 		onCreate();
 		state->init();
 
+		frameDuration = std::chrono::duration<double>(1.0 / targetFrameRate);
+
+		// Initialize variables for tracking time
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		auto accumulator = std::chrono::duration<double>(0);
+
 		while (window->isRunning()) {
 
-			update(0.0016f);
-			draw(0.0016f);
+			auto newTime = std::chrono::high_resolution_clock::now();
+			std::chrono::duration<double> frameTime = newTime - currentTime;
+			currentTime = newTime;
 
+			//calculate time in seccond
+			float deltaTime = frameTime.count();
+
+			// Add the frame time to the accumulator
+			accumulator += frameTime;
+			while (accumulator >= frameDuration) {
+				update(deltaTime);
+				draw(deltaTime);
+
+				accumulator -= frameDuration;
+			}
 			//imgui specfific
 			window->swapBuffers();
 
+			std::this_thread::sleep_for(std::chrono::duration<double>(1.0 / targetFrameRate));
 		}
 
 	}
@@ -121,6 +139,17 @@ namespace Thsan {
 	{
 		TS_CORE_ASSERT(controlSetting != nullptr, "controlSetting in Game::remove() class is nullptr, verify that you didn't somehow fuck a private pointer");
 		controlSetting->remove(key, inputState, inputAction);
+	}
+
+	void Game::setFPS(double framerate)
+	{
+		targetFrameRate = framerate;
+		frameDuration = std::chrono::duration<double>(1.0 / targetFrameRate);
+	}
+
+	double Game::getFPS()
+	{
+		return targetFrameRate;
 	}
 
 	void Game::trace(const std::string& msg)

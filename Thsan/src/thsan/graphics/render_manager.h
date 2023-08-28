@@ -52,7 +52,7 @@ namespace Thsan {
 		void flush() override;
 
 	private:
-		int x{0}, y{ 0 }, w{ 1024 }, h{ 1024 };
+		int x{0}, y{ 0 }, w{ 800 }, h{ 600 };
 		void pushFramebuffer(std::shared_ptr<Framebuffer> framebuffer) override;
 		void popFramebuffer() override;
 

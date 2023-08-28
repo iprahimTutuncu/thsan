@@ -13,6 +13,7 @@ namespace Thsan {
 		void setVertices(const std::vector<Vertex>& vertices) override;
 		inline std::size_t getVertexCount() const override;
 		inline std::size_t getIndiceCount() const override;
+		void resize(unsigned int size) override;
 		void bind() const override;
 		void unbind() const override;
 		void generate() override;
@@ -20,8 +21,8 @@ namespace Thsan {
 	private:
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
-		uint32_t vao;
-		uint32_t vbo;
-		uint32_t ebo;
+		uint32_t vao{0};
+		uint32_t vbo{0};
+		uint32_t ebo{0};
 	};
 }

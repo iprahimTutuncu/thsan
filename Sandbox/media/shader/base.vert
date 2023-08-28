@@ -10,13 +10,14 @@ uniform mat4 VP;
 uniform mat4 view;
 uniform vec3 camera_position;
 uniform vec3 camera_front;
+uniform vec3 translation;
 
 out vec4 vertex_color;
 out vec2 fragment_texCoord;
 
 void main()
 {
-    gl_Position = VP * vec4(position, 1.0);
+    gl_Position = VP * vec4(position + translation, 1.0);
     vertex_color = color;
     fragment_texCoord = texCoord;
 }

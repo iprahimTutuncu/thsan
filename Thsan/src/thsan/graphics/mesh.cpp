@@ -6,10 +6,6 @@
 
 namespace Thsan {
 
-	Mesh::Mesh(uint32_t vertexCount)
-	{
-	}
-
 	std::shared_ptr<Mesh> create_mesh(uint32_t vertexCount)
 	{
 		switch (get_graphic_API())

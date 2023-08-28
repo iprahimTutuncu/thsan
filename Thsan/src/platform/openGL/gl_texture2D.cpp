@@ -115,17 +115,34 @@ namespace Thsan {
 				1.f, 1.f, 1.f,		0.5f, 0.5f, 0.5f,	1.f, 1.f, 1.f,		0.5f, 0.5f, 0.5f
 			};
 
-			width = 4;
-			height = 4;
-			numChannels = 3;
-			create(vec2u{ 4,4 });
-			GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, checkerboard_pixels));
+			loadFromMemory(checkerboard_pixels, vec2u{ 4,4 });
 			TS_CORE_WARN("unable to load texture: {} - defaulting to {}", path, "default-checkerboard");
 		}
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 		return true;
 	}
+
+	bool GLTexture2D::loadFromMemory(const float* data, vec2u size)
+	{
+		create(size);
+
+		if (!data) {
+			TS_CORE_ERROR("IN GLTexture2D::loadFromMemory, the data is straight up nullptr. T'as foiré big, lol");
+			return false;
+		}
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size.x, size.y, 0, GL_RGB, GL_FLOAT, data);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		return true;
+	}
+
 
 	void GLTexture2D::bind(uint32_t slot)
 	{

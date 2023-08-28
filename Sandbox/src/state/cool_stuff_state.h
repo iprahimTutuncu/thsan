@@ -1,8 +1,6 @@
 #pragma once
 #include <thsan/state/State.h>
 
-#include "tsm/tsm.h"
-
 #define ts Thsan
 
 namespace ts {
@@ -10,11 +8,16 @@ namespace ts {
 	class Shader;
 	class Texture2D;
 	class Framebuffer;
+	class RenderStates2D;
+	class Tilemap;
+	class View;
 }
 
 namespace tsm {
-	class FreeCamera;
+	class AbstractCamera;
+	class Transform;
 }
+
 
 class CoolStuffState : public ts::State {
 public:
@@ -36,5 +39,9 @@ private:
 	std::shared_ptr<ts::Shader> shader;
 	std::shared_ptr<ts::Texture2D> tex2D;
 	std::shared_ptr<ts::Framebuffer> framebuffer;
-	std::shared_ptr<tsm::FreeCamera> free_camera;
+	std::shared_ptr<ts::RenderStates2D> renderstates;
+	std::shared_ptr<ts::Tilemap> tilemap;
+	std::shared_ptr<ts::View> view;
+	std::shared_ptr<tsm::AbstractCamera> freeCamera;
+	std::shared_ptr<tsm::Transform> transform;
 };

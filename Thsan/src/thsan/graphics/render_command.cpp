@@ -7,24 +7,38 @@
 #include "thsan/graphics/render_target.h"
 #include "thsan/graphics/render_manager.h"
 #include "thsan/graphics/framebuffer.h"
+#include "thsan/graphics/drawable.h"
 
 namespace Thsan {
 	namespace renderCommands {
 		void RenderMesh::execute(const std::weak_ptr<RenderTarget> target, RenderManager& renderManager)
 		{
 			std::shared_ptr<Mesh> tmp_mesh = mesh.lock();
-			std::shared_ptr<Shader> tmp_shader = shader.lock();
+			std::shared_ptr<RenderStates2D> tmp_renderStates2D = renderStates2D.lock();
 			std::shared_ptr<RenderTarget> tmp_target = target.lock();
 
-			if (tmp_mesh && tmp_shader) {
+			if (tmp_mesh && tmp_renderStates2D) {
 				tmp_mesh->bind();
-				tmp_shader->bind();
+				tmp_renderStates2D->bind();
 				tmp_target->draw(*tmp_mesh);
-				tmp_shader->unBind();
+				tmp_renderStates2D->unBind();
 				tmp_mesh->unbind();
 			}
+			else {
+				TS_CORE_WARN("Warning: attempting to execute RenderMesh on invalid data, mesh or renderState2D");
+			}
+		}
+
+		void RenderDrawable::execute(const std::weak_ptr<RenderTarget> target, RenderManager& renderManager)
+		{
+			std::shared_ptr<Drawable> tmp_drawable = drawable.lock();
+			std::shared_ptr<RenderStates2D> tmp_renderStates2D = renderStates2D.lock();
+			std::shared_ptr<RenderTarget> tmp_target = target.lock();
+
+			if (tmp_drawable && tmp_renderStates2D)
+				tmp_target->draw(*tmp_drawable, *tmp_renderStates2D);
 			else
-				TS_CORE_WARN("Warning: attempting to execute RenderMesh on invalid data");
+				TS_CORE_WARN("Warning: attempting to execute RenderDrawable on invalid data");
 		}
 
 		void PushFramebuffer::execute(const std::weak_ptr<RenderTarget> target, RenderManager& renderManager)
@@ -44,9 +58,14 @@ namespace Thsan {
 			renderManager.popFramebuffer();
 		}
 
-		THSAN_API std::unique_ptr<RenderCommand> create_renderMeshCommand(std::weak_ptr<Mesh> mesh, std::weak_ptr<Shader> shader)
+		THSAN_API std::unique_ptr<RenderCommand> create_renderMeshCommand(std::weak_ptr<Mesh> mesh, std::weak_ptr<RenderStates2D> renderStates2D)
 		{
-			return std::make_unique<RenderMesh>(mesh, shader);
+			return std::make_unique<RenderMesh>(mesh, renderStates2D);
+		}
+
+		THSAN_API std::unique_ptr<RenderCommand> create_renderDrawableCommand(std::weak_ptr<Drawable> drawable, std::weak_ptr<RenderStates2D> renderStates2D)
+		{
+			return std::make_unique<RenderDrawable>(drawable, renderStates2D);
 		}
 
 		THSAN_API std::unique_ptr<RenderCommand> create_pushFramebufferCommand(std::weak_ptr<Framebuffer> framebuffer)
@@ -58,6 +77,8 @@ namespace Thsan {
 
 			return std::make_unique<PopFramebuffer>();
 		}
+
+
 
 	}
 }

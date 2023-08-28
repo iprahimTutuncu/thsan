@@ -45,6 +45,8 @@ bool Thsan::SDLWindow::create(const int width, const int height, const char* tit
 	this->height = height;
 	this->title = title;
 
+	setSize(width, height);
+
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		TS_CORE_ERROR("error initiliazing SDL2: {}", SDL_GetError());
 		return false;

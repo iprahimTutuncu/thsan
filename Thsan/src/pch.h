@@ -15,6 +15,7 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <chrono>
 
 #ifdef TS_PLATFORM_WINDOWS
 #include <Windows.h>

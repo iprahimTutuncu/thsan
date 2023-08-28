@@ -93,6 +93,7 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\Thsan\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\" /Y /I
+xcopy /E /I /Y "$(ProjectDir)media" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\media\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -113,6 +114,7 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\Thsan\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\" /Y /I
+xcopy /E /I /Y "$(ProjectDir)media" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\media\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -133,19 +135,14 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\Thsan\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\" /Y /I
+xcopy /E /I /Y "$(ProjectDir)media" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\media\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ressource_manager\texture2D_manager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\state\cool_stuff_state.cpp" />
-    <ClCompile Include="vendor\tsm\math\basis.cpp" />
-    <ClCompile Include="vendor\tsm\math\camera\abstract_camera.cpp" />
-    <ClCompile Include="vendor\tsm\math\camera\fixed_target_camera.cpp" />
-    <ClCompile Include="vendor\tsm\math\camera\free_camera.cpp" />
-    <ClCompile Include="vendor\tsm\math\camera\target_camera.cpp" />
-    <ClCompile Include="vendor\tsm\math\transform.cpp" />
-    <ClCompile Include="vendor\tsm\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Thsan\Thsan.vcxproj">
@@ -153,15 +150,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ressource_manager\texture2D_manager.h" />
     <ClInclude Include="src\state\cool_stuff_state.h" />
-    <ClInclude Include="vendor\tsm\math\basis.h" />
-    <ClInclude Include="vendor\tsm\math\camera\abstract_camera.h" />
-    <ClInclude Include="vendor\tsm\math\camera\fixed_target_camera.h" />
-    <ClInclude Include="vendor\tsm\math\camera\free_camera.h" />
-    <ClInclude Include="vendor\tsm\math\camera\target_camera.h" />
-    <ClInclude Include="vendor\tsm\math\transform.h" />
-    <ClInclude Include="vendor\tsm\pch.h" />
-    <ClInclude Include="vendor\tsm\tsm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

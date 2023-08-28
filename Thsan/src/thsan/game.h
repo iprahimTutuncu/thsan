@@ -33,6 +33,9 @@ namespace Thsan {
 		void add(Key key, InputState inputState, InputAction inputAction);
 		void remove(Key key, InputState inputState, InputAction inputAction);
 
+		void setFPS(double framerate);
+		double getFPS();
+
 		void trace(const std::string& msg);
 
 		virtual void onUICreate();
@@ -46,6 +49,7 @@ namespace Thsan {
 		State* state{nullptr};
 	private:
 		ControlSetting* controlSetting{ nullptr };
+		double targetFrameRate{ 60.0 };
 	};
 
 	Game* create_game();

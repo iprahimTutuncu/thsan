@@ -16,9 +16,11 @@ namespace Thsan {
 		void setUniformInt(const std::string& name, int value) override;
 		void setUniformFloat(const std::string& name, float value) override;
 
+		void setMat3(const std::string& name, glm::mat3 value) override;
 		void setMat4(const std::string& name, glm::mat4 value) override;
-		void setVec4(const std::string& name, glm::vec4 value) override;
+
 		void setVec3(const std::string& name, glm::vec3 value) override;
+		void setVec4(const std::string& name, glm::vec4 value) override;
 
 		void setTexture2D(const std::string& name, std::weak_ptr<Texture2D> tex2D) override;
 

@@ -20,7 +20,7 @@ namespace Thsan {
 		// todo
 		//virtual Image copyToImage() const = 0;
 		//virtual [[nodiscard]] bool loadFromImage(const Image& image, const glm::vec4& area = glm::vec4()) = 0;
-		//virtual [[nodiscard]] bool loadFromMemory(const void* data, std::size_t size, const glm::vec4& area = glm::vec4()) = 0;
+		virtual [[nodiscard]] bool loadFromMemory(const float* data, vec2u size) = 0;
 		
 		virtual bool isSmooth() const;
 		virtual bool isRepeated() const;

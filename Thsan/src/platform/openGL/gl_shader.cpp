@@ -108,6 +108,12 @@ namespace Thsan {
 		GL_CHECK(glUniform1f(getUniformId(name), value));
 	}
 
+	void GLShader::setMat3(const std::string& name, glm::mat3 value)
+	{
+		GL_CHECK(glUseProgram(program_id));
+		GL_CHECK(glUniformMatrix3fv(getUniformId(name), 1, GL_FALSE, glm::value_ptr(value)));
+	}
+
 	void GLShader::setMat4(const std::string& name, glm::mat4 value)
 	{
 		GL_CHECK(glUseProgram(program_id));
@@ -127,10 +133,22 @@ namespace Thsan {
 	}
 	void GLShader::setTexture2D(const std::string& name, std::weak_ptr<Texture2D> tex2D)
 	{
+
 		int32_t texture_unif_Loc = getUniformId(name.c_str());
+
+		for (auto& entry : uniform_texture_ids)
+		{
+			if (entry.second == texture_unif_Loc)
+			{
+				entry.first = tex2D;
+				return;
+			}
+		}
+
 		uniform_texture_ids.push_back(std::make_pair(tex2D, texture_unif_Loc));
 		GL_CHECK(glUniform1i(texture_unif_Loc, texture_count++));
 	}
+
 	int GLShader::getUniformId(const std::string& name)
 	{
 		if (uniform_ids.find(name) == uniform_ids.end())

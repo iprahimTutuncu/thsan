@@ -1,9 +1,10 @@
 #pragma once
 #include "target_camera.h"
 #include <vector>
+#include "thsan/core.h"
 
 namespace tsm {
-	class FixedTargetCamera : public TargetCamera {
+	class THSAN_API FixedTargetCamera : public TargetCamera {
 	public:
 		FixedTargetCamera() = default;
 		~FixedTargetCamera() = default;

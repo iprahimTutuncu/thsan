@@ -16,9 +16,6 @@
     <ClInclude Include="src\thsan\game.h">
       <Filter>thsan</Filter>
     </ClInclude>
-    <ClInclude Include="src\thsan\manager\log_manager.h">
-      <Filter>thsan</Filter>
-    </ClInclude>
     <ClInclude Include="src\thsan\window.h" />
     <ClInclude Include="src\thsan\Input\key_code.h">
       <Filter>thsan</Filter>
@@ -41,8 +38,7 @@
     <ClInclude Include="src\thsan\graphics\texture.h" />
     <ClInclude Include="src\thsan\graphics\image.h" />
     <ClInclude Include="src\platform\openGL\gl_texture2D.h" />
-    <ClInclude Include="src\thsan\graphics\render_state.h" />
-    <ClInclude Include="src\thsan\manager\shader_manager.h" />
+    <ClInclude Include="src\thsan\graphics\render_states.h" />
     <ClInclude Include="src\thsan\graphics\framebuffer.h" />
     <ClInclude Include="src\platform\openGL\gl_framebuffer.h" />
     <ClInclude Include="src\thsan\system\vector.h" />
@@ -52,10 +48,7 @@
     <ClInclude Include="src\thsan\Input\event.h" />
     <ClInclude Include="src\platform\SDL\sdl_window.h" />
     <ClInclude Include="src\tsm\math\camera\abstract_camera.h" />
-    <ClInclude Include="src\tsm\math\camera\fixed_target_camera.h" />
     <ClInclude Include="src\tsm\math\camera\free_camera.h" />
-    <ClInclude Include="src\tsm\math\camera\target_camera.h" />
-    <ClInclude Include="src\tsm\math\basis.h" />
     <ClInclude Include="src\tsm\math\transform.h" />
     <ClInclude Include="src\tsm\tsm.h" />
     <ClInclude Include="src\pch.h" />
@@ -63,13 +56,14 @@
     <ClInclude Include="src\platform\vulkan\vk_config.h" />
     <ClInclude Include="src\platform\vulkan\vk_initializer.h" />
     <ClInclude Include="src\platform\vulkan\vk_swapchain.h" />
-    <ClInclude Include="src\thsan\graphics\sprite_animation.h" />
+    <ClInclude Include="src\manager\log_manager.h" />
+    <ClInclude Include="src\thsan\graphics\tilemap.h" />
+    <ClInclude Include="src\thsan\graphics\drawable.h" />
+    <ClInclude Include="src\thsan\graphics\tilemap_impl.h" />
+    <ClInclude Include="src\thsan\graphics\view.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\thsan\game.cpp">
-      <Filter>thsan</Filter>
-    </ClCompile>
-    <ClCompile Include="src\thsan\manager\log_manager.cpp">
       <Filter>thsan</Filter>
     </ClCompile>
     <ClCompile Include="src\thsan\window.cpp" />
@@ -88,21 +82,21 @@
     <ClCompile Include="src\platform\openGL\gl_helper.cpp" />
     <ClCompile Include="src\thsan\graphics\texture.cpp" />
     <ClCompile Include="src\platform\openGL\gl_texture2D.cpp" />
-    <ClCompile Include="src\thsan\graphics\render_state.cpp" />
+    <ClCompile Include="src\thsan\graphics\render_states.cpp" />
     <ClCompile Include="src\thsan\graphics\framebuffer.cpp" />
     <ClCompile Include="src\platform\openGL\gl_framebuffer.cpp" />
     <ClCompile Include="src\thsan\graphics\vertex.cpp" />
     <ClCompile Include="src\thsan\Input\ControlSetting.cpp" />
     <ClCompile Include="src\thsan\state\State.cpp" />
     <ClCompile Include="src\platform\SDL\sdl_window.cpp" />
-    <ClCompile Include="src\tsm\math\camera\abstract_camera.cpp" />
-    <ClCompile Include="src\tsm\math\camera\fixed_target_camera.cpp" />
     <ClCompile Include="src\tsm\math\camera\free_camera.cpp" />
-    <ClCompile Include="src\tsm\math\camera\target_camera.cpp" />
-    <ClCompile Include="src\tsm\math\basis.cpp" />
     <ClCompile Include="src\tsm\math\transform.cpp" />
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\platform\vulkan\vk_initializer.cpp" />
     <ClCompile Include="src\platform\vulkan\vk_swapchain.cpp" />
+    <ClCompile Include="src\manager\log_manager.cpp" />
+    <ClCompile Include="src\thsan\graphics\tilemap.cpp" />
+    <ClCompile Include="src\thsan\graphics\tilemap_impl.cpp" />
+    <ClCompile Include="src\thsan\graphics\view.cpp" />
   </ItemGroup>
 </Project>

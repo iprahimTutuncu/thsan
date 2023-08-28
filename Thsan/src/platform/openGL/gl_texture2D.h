@@ -14,6 +14,8 @@ namespace Thsan {
 
 		virtual bool loadFromFile(const std::filesystem::path& filename) override;
 
+		virtual bool loadFromMemory(const float* data, vec2u size) override;
+
 		virtual void bind(uint32_t slot) override;
 
 		virtual vec2u getSize() const override;

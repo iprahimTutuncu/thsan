@@ -10,6 +10,11 @@
 
 namespace Thsan {
 
+	enum class default_shader_texture {
+		white,
+		checkerboard
+	};
+
 	class THSAN_API Shader {
 	public:
 		Shader() = default;
@@ -22,11 +27,14 @@ namespace Thsan {
 		virtual void setUniformInt(const std::string& name, int value) = 0;
 		virtual void setUniformFloat(const std::string& name, float value) = 0;
 
+		virtual void setMat3(const std::string& name, glm::mat3 value) = 0;
 		virtual void setMat4(const std::string& name, glm::mat4 value) = 0;
-		virtual void setVec4(const std::string& name, glm::vec4 value) = 0;
+
 		virtual void setVec3(const std::string& name, glm::vec3 value) = 0;
+		virtual void setVec4(const std::string& name, glm::vec4 value) = 0;
+
+		virtual void setCamera(std::weak_ptr<tsm::AbstractCamera> camera);
 		virtual void setTexture2D(const std::string& name, std::weak_ptr<Texture2D> tex2D) = 0;
-		virtual void setCamera(std::weak_ptr<tsm::AbsractCamera> camera);
 
 	protected:
 		std::string readFile(std::string path);
