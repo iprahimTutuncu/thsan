@@ -18,6 +18,7 @@ namespace tsm {
         virtual void translate(const glm::vec3& rotate) = 0;
 
 
+        virtual void setTransform(const glm::mat4& transform) = 0;
         virtual const glm::mat4 getTransform() = 0;
 
         static std::shared_ptr<Transform> create();
@@ -36,6 +37,7 @@ namespace tsm {
         virtual void scale(const glm::vec3& rotate) override;
         virtual void translate(const glm::vec3& rotate) override;
 
+        virtual void setTransform(const glm::mat4& transform) override;
         virtual const glm::mat4 getTransform() override;
 
     private:

@@ -14,6 +14,11 @@ namespace Thsan {
         virtual void setZoom(float zoom) = 0;
         virtual void setRotation(float angle) = 0;
 
+        virtual glm::vec2 getPosition() = 0;
+        virtual glm::vec2 getSize() = 0;
+        virtual float getZoom() = 0;
+        virtual float getRotation() = 0;
+
         virtual glm::mat4 getViewMatrix() const = 0;
         virtual glm::mat4 getProjectionMatrix() const = 0;
         virtual glm::mat4 getViewProjectionMatrix() const = 0;
@@ -29,6 +34,11 @@ namespace Thsan {
         void setSize(float width, float height) override;
         void setZoom(float zoom) override;
         void setRotation(float angle) override;
+
+        glm::vec2 getPosition() override;
+        glm::vec2 getSize() override;
+        float getZoom() override;
+        float getRotation() override;
 
         glm::mat4 getViewMatrix() const override;
         glm::mat4 getProjectionMatrix() const override;

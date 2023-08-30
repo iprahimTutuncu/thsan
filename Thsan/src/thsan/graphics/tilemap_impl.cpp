@@ -224,7 +224,7 @@ namespace Thsan {
     }
 
 
-    void TilemapImpl::draw(const RenderTarget& target, const RenderStates2D& states) const 
+    void TilemapImpl::draw(const RenderTarget& target, RenderStates2D& states) const
     {
         target.draw(*mesh, states);
     }

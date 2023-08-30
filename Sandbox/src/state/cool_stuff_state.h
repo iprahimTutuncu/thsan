@@ -11,6 +11,7 @@ namespace ts {
 	class RenderStates2D;
 	class Tilemap;
 	class View;
+	class SpriteAnimation;
 }
 
 namespace tsm {
@@ -42,6 +43,7 @@ private:
 	std::shared_ptr<ts::RenderStates2D> renderstates;
 	std::shared_ptr<ts::Tilemap> tilemap;
 	std::shared_ptr<ts::View> view;
+	std::shared_ptr<ts::SpriteAnimation> spriteAnimation;
 	std::shared_ptr<tsm::AbstractCamera> freeCamera;
 	std::shared_ptr<tsm::Transform> transform;
 };

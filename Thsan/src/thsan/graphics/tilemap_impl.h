@@ -29,7 +29,7 @@ namespace Thsan {
         int* getRawTileData() override;
         bool loadTileset(std::shared_ptr<Texture2D> tileset_texture) override;
 
-        void draw(const RenderTarget& target, const RenderStates2D& states) const override;
+        void draw(const RenderTarget& target, RenderStates2D& states) const override;
 
     private:
         std::shared_ptr<Mesh> mesh;

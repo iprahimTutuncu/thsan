@@ -19,12 +19,13 @@ namespace Thsan {
         TS_CORE_ERROR("error: RenderTarget not supported for the current graphic API");
         return nullptr;
     }
-    void RenderTarget::draw(const Mesh& mesh, const RenderStates2D& states) const
+    void RenderTarget::draw(const Mesh& mesh, RenderStates2D& states) const
     {
         states.bind();
         draw(mesh);
+        states.unBind();
     }
-    void RenderTarget::draw(const Drawable& drawable, const RenderStates2D& states) const
+    void RenderTarget::draw(const Drawable& drawable, RenderStates2D& states) const
     {
         drawable.draw(*this, states);
     }

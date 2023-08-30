@@ -12,6 +12,6 @@ namespace Thsan {
     protected:
         friend class RenderTarget;
 
-        virtual void draw(const RenderTarget& target, const RenderStates2D& states) const = 0;
+        virtual void draw(const RenderTarget& target, RenderStates2D& states) const = 0;
     };
 }

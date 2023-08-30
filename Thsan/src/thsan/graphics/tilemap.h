@@ -35,9 +35,9 @@ namespace Thsan {
 
         virtual bool loadTileset(std::shared_ptr<Texture2D> tileset_texture) = 0;
 
-    private:
+    protected:
         // Hérité via Drawable
-        virtual void draw(const RenderTarget& target, const RenderStates2D& states) const = 0;
+        virtual void draw(const RenderTarget& target, RenderStates2D& states) const = 0;
 
     };
 

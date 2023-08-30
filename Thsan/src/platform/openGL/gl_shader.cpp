@@ -149,7 +149,7 @@ namespace Thsan {
 		GL_CHECK(glUniform1i(texture_unif_Loc, texture_count++));
 	}
 
-	int GLShader::getUniformId(const std::string& name)
+	int GLShader::getUniformId(const std::string& name) 
 	{
 		if (uniform_ids.find(name) == uniform_ids.end())
 			uniform_ids[name] = GL_CHECK(glGetUniformLocation(program_id, name.c_str()));

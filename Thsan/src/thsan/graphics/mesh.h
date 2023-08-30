@@ -23,7 +23,7 @@ namespace Thsan {
 		virtual void generate() = 0;
 
 	protected:
-		bool changed;
+		bool changed{false};
 
 	};
 

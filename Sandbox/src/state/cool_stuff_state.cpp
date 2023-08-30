@@ -10,6 +10,7 @@
 #include <thsan/graphics/render_states.h>
 #include <thsan/graphics/tilemap.h>
 #include <thsan/graphics/view.h>
+#include <thsan/graphics/sprite_animation.h>
 #include <thsan/game.h>
 #include <tsm/math/transform.h>
 
@@ -21,6 +22,7 @@ CoolStuffState::CoolStuffState(ts::Game* parent):
 	ts::State(parent)
 { 
 }
+
 std::shared_ptr<Thsan::Mesh> generateColoredGrid(unsigned int columns, unsigned int rows, float cellSize) {
 	// Calculate the total number of vertices and indices
 	unsigned int vertexCount = (rows + 1) * (columns + 1);
@@ -190,7 +192,18 @@ void CoolStuffState::init()
 	mesh = createQuadMesh(0.f, 0.f, 100.f, 100.f, Thsan::vec4f{1.0f, 0.0f, 0.0f, 1.0f});
 	mesh->generate();
 
+
+
 	tex2D = RessourceManager::Texture2DManager::get(RessourceManager::Texture2DManager::default_texture_white);
+	tex2D = RessourceManager::Texture2DManager::get("media/image/sonic.png");
+
+	spriteAnimation = Thsan::SpriteAnimation::create();
+	spriteAnimation->setTexture(tex2D);
+	spriteAnimation->setCurrAnimation("idle");
+	spriteAnimation->add(glm::vec4(200.f, 300.f, 50.f, 80.f), 5.f);
+	spriteAnimation->add(glm::vec4(100.f, 300.f, 50.f, 80.f), 5.f);
+	spriteAnimation->enableLoop();
+	spriteAnimation->start();
 
 	framebuffer = ts::create_framebuffer(800, 600);
 
@@ -260,7 +273,7 @@ void CoolStuffState::update(const float& deltaTime)
 	static float t = 0.f;
 	t += deltaTime;
 
-
+	spriteAnimation->update(deltaTime);
 }
 
 void CoolStuffState::draw(ts::RenderManager* target, const float& deltaTime)
@@ -276,7 +289,8 @@ void CoolStuffState::draw(ts::RenderManager* target, const float& deltaTime)
 	auto pop_fb = ts::renderCommands::create_popFramebufferCommand();
 	target->submit(std::move(pop_fb));
 
-	auto rc = ts::renderCommands::create_renderMeshCommand(mesh, renderstates);
+	//auto rc = ts::renderCommands::create_renderMeshCommand(mesh, renderstates);
+	auto rc = ts::renderCommands::create_renderDrawableCommand(spriteAnimation, renderstates);
 	//auto rc = ts::renderCommands::create_renderDrawableCommand(tilemap, renderstates);
 	target->submit(std::move(rc));
 	target->flush();

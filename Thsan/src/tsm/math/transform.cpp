@@ -5,6 +5,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/ext/quaternion_common.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+
 namespace tsm {
 
     TransformImpl::TransformImpl() {
@@ -57,6 +59,33 @@ namespace tsm {
         glm::mat4 y_rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotate.y), glm::vec3(0.0f, 1.0f, 0.0f));
         glm::mat4 z_rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotate.z), glm::vec3(0.0f, 0.0f, 1.0f));
         rotation_matrix = z_rotation * y_rotation * x_rotation * rotation_matrix;
+    }
+
+    void TransformImpl::setTransform(const glm::mat4& transform)
+    {
+        //maybe have the individual compoenent in th set transform
+        //a meidter, voir SFML comment y font
+
+        transform_matrix = transform_matrix;
+        
+        glm::vec3 translation, skew, scale;
+        glm::quat rotation_quat;
+        glm::vec4 perspective;
+        glm::decompose(transform, scale, rotation_quat, translation, skew, perspective);
+
+        // Update local variables
+        translation_matrix = glm::translate(glm::mat4(1.0f), translation);
+        scale_matrix = glm::scale(glm::mat4(1.0f), scale);
+
+        // Calculate rotation matrix from the quaternion
+        rotation_matrix = glm::mat4_cast(rotation_quat);
+
+        // Set the transform matrix
+        transform_matrix = transform;
+
+        translate_to_origin_matrix = glm::translate(glm::mat4(1.0f), -translation);
+        translate_back_matrix = glm::translate(glm::mat4(1.0f), translation);
+
     }
 
     const glm::mat4 TransformImpl::getTransform() {

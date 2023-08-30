@@ -55,4 +55,25 @@ namespace Thsan {
         glm::mat4 viewMatrix = getViewMatrix();
         return projectionMatrix * viewMatrix;
     }
+
+
+    glm::vec2 ViewImpl::getPosition()
+    {
+        return position;
+    }
+
+    glm::vec2 ViewImpl::getSize()
+    {
+        return size;
+    }
+
+    float ViewImpl::getZoom()
+    {
+        return zoomFactor;
+    }
+
+    float ViewImpl::getRotation()
+    {
+        return rotationAngle;
+    }
 }
