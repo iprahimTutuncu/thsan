@@ -38,7 +38,8 @@ public:
 private:
 	std::shared_ptr<ts::Mesh> mesh;
 	std::shared_ptr<ts::Shader> shader;
-	std::shared_ptr<ts::Texture2D> tex2D;
+	std::shared_ptr<ts::Texture2D> sprite_texture;
+	std::shared_ptr<ts::Texture2D> tilemap_texture;
 	std::shared_ptr<ts::Framebuffer> framebuffer;
 	std::shared_ptr<ts::RenderStates2D> renderstates;
 	std::shared_ptr<ts::Tilemap> tilemap;

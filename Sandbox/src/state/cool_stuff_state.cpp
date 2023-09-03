@@ -17,6 +17,25 @@
 #include "cool_stuff_state.h"
 #include "../ressource_manager/texture2D_manager.h"
 
+struct world {
+	float gravity{ -9.81 };
+};
+
+struct Player{
+	glm::vec2 position;
+	float jump_height;
+	float jump_duration;
+};
+
+float get_gravity(Player p) {
+	return (-2 * p.jump_height) / (p.jump_duration * p.jump_duration);
+}
+
+float get_initial_velocity(Player p) {
+	return (2 * p.jump_height) / p.jump_duration;
+}
+
+
 
 CoolStuffState::CoolStuffState(ts::Game* parent):
 	ts::State(parent)
@@ -176,8 +195,6 @@ std::shared_ptr<Thsan::Mesh> generateColoredCube(float size) {
 	return cubeMesh;
 }
 
-
-
 void CoolStuffState::init()
 {
 	parent->add(ts::Key::Left, ts::InputState::isPressed, ts::InputAction::left);
@@ -186,6 +203,8 @@ void CoolStuffState::init()
 	parent->add(ts::Key::Down, ts::InputState::isPressed, ts::InputAction::down);
 	parent->add(ts::Key::Q, ts::InputState::isPressed, ts::InputAction::rotateLeft);
 	parent->add(ts::Key::E, ts::InputState::isPressed, ts::InputAction::rotateRight);
+	parent->add(ts::Key::Z, ts::InputState::isPressed, ts::InputAction::action);
+	parent->add(ts::Key::Lshift, ts::InputState::isPressed, ts::InputAction::select);
 
 	shader = ts::create_shader("media/shader/base2D.vert", "media/shader/base2D.frag");
 
@@ -194,15 +213,21 @@ void CoolStuffState::init()
 
 
 
-	tex2D = RessourceManager::Texture2DManager::get(RessourceManager::Texture2DManager::default_texture_white);
-	tex2D = RessourceManager::Texture2DManager::get("media/image/sonic.png");
+	sprite_texture = RessourceManager::Texture2DManager::get("media/image/sonic.png");
 
 	spriteAnimation = Thsan::SpriteAnimation::create();
-	spriteAnimation->setTexture(tex2D);
+	spriteAnimation->setTexture(sprite_texture);
 	spriteAnimation->setCurrAnimation("idle");
-	spriteAnimation->add(glm::vec4(200.f, 300.f, 50.f, 80.f), 5.f);
-	spriteAnimation->add(glm::vec4(100.f, 300.f, 50.f, 80.f), 5.f);
+	spriteAnimation->add(glm::vec4(11.f, 14.f, 22.f, 32.f), 0.1f);
+	spriteAnimation->add(glm::vec4(38.f, 12.f, 22.f, 34.f), 0.1f);
+	spriteAnimation->add(glm::vec4(65.f, 11.f, 24.f, 35.f), 0.1f);
+	spriteAnimation->add(glm::vec4(94.f, 11.f, 24.f, 35.f), 0.1f);
+	spriteAnimation->add(glm::vec4(123.f, 14.f, 26.f, 32.f), 0.1f);
+	spriteAnimation->add(glm::vec4(154.f, 15.f, 24.f, 31.f), 0.1f);
 	spriteAnimation->enableLoop();
+	spriteAnimation->setSpeed(1.f);
+
+	spriteAnimation->setKeyColor(tsm::Color(0, 112, 112, 255));
 	spriteAnimation->start();
 
 	framebuffer = ts::create_framebuffer(800, 600);
@@ -210,15 +235,65 @@ void CoolStuffState::init()
 	tilemap = Thsan::create_tilemap();
 	const int tiles[] =
 	{ 
-		1, 1, 1,
-		1, 1, 1,
-		1, 1, 1
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,240,241,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,328,329,0,0,0,0,0,0,0,0,0,566,567,568,567,568,569,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,328,329,0,0,0,0,0,0,0,0,0,610,611,612,611,612,613,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,566,567,568,567,568,568,567,568,568,568,567,568,569,0,0,654,655,656,656,656,657,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,610,611,612,611,611,611,612,611,612,611,611,612,613,0,0,0,0,0,0,0,0,0,0,0,0,566,567,568,569,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,610,611,612,611,612,611,612,611,612,611,611,612,613,0,0,0,0,0,0,0,0,0,0,0,0,610,611,612,613,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,610,611,612,611,612,611,612,611,612,611,611,612,613,0,0,0,0,0,0,0,0,0,0,0,0,654,655,656,657,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,610,611,612,611,612,611,612,611,612,611,611,612,613,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,610,611,612,611,612,611,612,611,612,611,611,612,613,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,610,611,612,611,612,611,612,611,612,611,611,612,613,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,610,611,612,611,612,611,612,611,612,611,611,612,613,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,610,611,612,611,612,611,612,611,612,611,611,612,613,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,610,611,611,611,612,611,611,611,612,611,611,612,613,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	};
+
+
+	tilemap_texture = RessourceManager::Texture2DManager::get("media/image/tileset.png");
+
+	Thsan::Tileset tileset;
+	tileset.margin = 8;
+	tileset.tilewidth = 16;
+	tileset.tileheight = 16;
+	tileset.tilemapWidth = 50;
+	tileset.tilemapHeight = 40;
+	tileset.backgroundcolor = tsm::Color(0, 0, 0, 0);
+	tileset.spacing = 0;
+
+	tilemap->loadTileset(tileset, tilemap_texture);
 	tilemap->load(tiles);
 
 	renderstates = Thsan::create_renderstates2D();
 	renderstates->setShader(shader);
-	renderstates->setTexture2D(tex2D);
 
 	//make a default if not exist
 	view = Thsan::View::create(0, 0, 800, 600, 1.f, 0.f);
@@ -243,6 +318,7 @@ void CoolStuffState::input(const float& deltaTime, std::vector<ts::InputAction> 
 	static float y = 0.f;
 	static float r = 0.f;
 	static float t = 0.f;
+	static float z = 1.f;
 	for (ts::InputAction i : inputActions) {
 		if (i == Thsan::InputAction::left)
 			x += -200 * deltaTime;
@@ -253,19 +329,24 @@ void CoolStuffState::input(const float& deltaTime, std::vector<ts::InputAction> 
 		if (i == Thsan::InputAction::down)
 			y += 200 * deltaTime;
 		if (i == Thsan::InputAction::rotateLeft)
-			r += 10 * deltaTime;
+			r += 1 * deltaTime;
 		if (i == Thsan::InputAction::rotateRight)
-			r -= 10 * deltaTime;
-	
+			r -= 1 * deltaTime;
+		if (i == Thsan::InputAction::action)
+			z -= 1 * deltaTime;
+		if (i == Thsan::InputAction::select)
+			z += 1 * deltaTime;
+
 		parent->trace("x: " + std::to_string(x) + ", y: " + std::to_string(y));
 	}
 
 	t += 10.f * deltaTime;
-	transform = tsm::Transform::create();
-	transform->setTranslation(glm::vec3(x, y, 0.0));
-	transform->setOrigin(glm::vec3(50.f, 50.f, 0.f));
-	transform->setRotation(glm::vec3(0.0, 0.0, t));
-	renderstates->setTransform(transform);
+
+	spriteAnimation->setPosition(glm::vec3(x, y, 0.f));
+	view->setZoom(z);
+	view->setRotation(r);
+	view->setPosition(x - 400, y - 300);
+	renderstates->setView(view);
 }
 
 void CoolStuffState::update(const float& deltaTime)
@@ -284,15 +365,16 @@ void CoolStuffState::draw(ts::RenderManager* target, const float& deltaTime)
 	target->submit(std::move(push_fb));
 
 	//auto rc = ts::renderCommands::create_renderSceneCommand(std::vector<Model>, transform, shader);
-
+	//auto rc = ts::renderCommands::create_renderMeshCommand(mesh, renderstates);
 
 	auto pop_fb = ts::renderCommands::create_popFramebufferCommand();
 	target->submit(std::move(pop_fb));
 
-	//auto rc = ts::renderCommands::create_renderMeshCommand(mesh, renderstates);
-	auto rc = ts::renderCommands::create_renderDrawableCommand(spriteAnimation, renderstates);
-	//auto rc = ts::renderCommands::create_renderDrawableCommand(tilemap, renderstates);
-	target->submit(std::move(rc));
+	auto sprite_command = ts::renderCommands::create_renderDrawableCommand(spriteAnimation, renderstates);
+	target->submit(std::move(sprite_command));
+
+	auto tilemap_command = ts::renderCommands::create_renderDrawableCommand(tilemap, renderstates);
+	target->submit(std::move(tilemap_command));
 	target->flush();
 
 }

@@ -33,20 +33,20 @@ namespace Thsan {
     glm::mat4 ViewImpl::getViewMatrix() const {
         glm::mat4 viewMatrix(1.0f);
 
-        viewMatrix = glm::translate(viewMatrix, glm::vec3(position, 0.0));
         viewMatrix = glm::translate(viewMatrix, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
+        viewMatrix = glm::scale(viewMatrix, glm::vec3(zoomFactor, zoomFactor, 1.0f));
+
         viewMatrix = glm::rotate(viewMatrix, glm::radians(rotationAngle), glm::vec3(0.0f, 0.0f, 1.0f));
         viewMatrix = glm::translate(viewMatrix, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
 
-        viewMatrix = glm::scale(viewMatrix, glm::vec3(zoomFactor, zoomFactor, 1.0f));
-
+        viewMatrix = glm::translate(viewMatrix, glm::vec3(-position, 0.0));
         return viewMatrix;
     }
 
 
     glm::mat4 ViewImpl::getProjectionMatrix() const {
         // Adjust the projection matrix
-        return glm::ortho(0.f, size.x, 0.f, size.y, -1000.f, 1000.f);
+        return glm::ortho(0.f, size.x, size.y, 0.f, -1000.f, 1000.f);
     }
 
 

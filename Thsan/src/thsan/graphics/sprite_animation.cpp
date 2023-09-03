@@ -5,6 +5,7 @@
 #include "tsm/math/transform.h"
 #include "render_states.h"
 #include "thsan/log.h"
+#include "shader.h"
 
 namespace Thsan {
 
@@ -56,6 +57,9 @@ namespace Thsan {
 
     SpriteAnimationImpl::SpriteAnimationImpl()
     {
+        color.setRGB(255, 255, 255, 255);
+        keyColor.setRGB(0, 0, 0, 0);
+
         mesh = create_mesh(4);
         std::shared_ptr<Thsan::Mesh> quadMesh = Thsan::create_mesh(4);
 
@@ -64,22 +68,22 @@ namespace Thsan {
 
         // Vertex 0 - Top Left
         vertices[0].position = Thsan::vec3f{ 0.f, 0.f, 0.0f };
-        vertices[0].color = Thsan::vec4f{1.f, 1.f, 1.f, 1.f};
+        vertices[0].color = this->color.toVec4f();
         vertices[0].texCoord = Thsan::vec2f{ 0.f , 0.0f };
 
         // Vertex 1 - Top Right
         vertices[1].position = Thsan::vec3f{ 1.f, 0.f, 0.0f };
-        vertices[1].color = Thsan::vec4f{ 1.f, 1.f, 1.f, 1.f };
+        vertices[1].color = this->color.toVec4f();
         vertices[1].texCoord = Thsan::vec2f{ 1.0f, 0.0f };
 
         // Vertex 2 - Bottom Right
         vertices[2].position = Thsan::vec3f{ 1.f, 1.f, 0.0f };
-        vertices[2].color = Thsan::vec4f{ 1.f, 1.f, 1.f, 1.f };
+        vertices[2].color = this->color.toVec4f();
         vertices[2].texCoord = Thsan::vec2f{ 1.0f, 1.0f };
 
         // Vertex 3 - Bottom Left
         vertices[3].position = Thsan::vec3f{ 0.f, 1.f, 0.0f };
-        vertices[3].color = Thsan::vec4f{ 1.f, 1.f, 1.f, 1.f };
+        vertices[3].color = this->color.toVec4f();
         vertices[3].texCoord = Thsan::vec2f{ 0.0f, 1.0f };
 
         // Set the quad vertices
@@ -93,7 +97,6 @@ namespace Thsan {
 
 
         transform = tsm::Transform::create();
-        transform_result = tsm::Transform::create();
     }
 
     void SpriteAnimationImpl::generate()
@@ -106,27 +109,30 @@ namespace Thsan {
         coord.y /= spritesheet_height;
         coord.z /= spritesheet_width;
         coord.w /= spritesheet_height;
-
+        Thsan::vec4f col = color.toVec4f();
         // Vertex 0 - Top Left
         Mesh& mesh_ref = *mesh;
         mesh_ref[0].position = Thsan::vec3f{ 0.f, 0.f, 0.0f };
-        mesh_ref[0].color = Thsan::vec4f{ 1.f, 1.f, 1.f, 1.f };
+        mesh_ref[0].color = col;
         mesh_ref[0].texCoord = Thsan::vec2f{ coord.x , coord.y };
 
         // Vertex 1 - Top Right
         mesh_ref[1].position = Thsan::vec3f{ rect.z, 0.f, 0.0f };
-        mesh_ref[1].color = Thsan::vec4f{ 1.f, 1.f, 1.f, 1.f };
+        mesh_ref[1].color = col;
         mesh_ref[1].texCoord = Thsan::vec2f{ coord.x + coord.z, coord.y };
 
         // Vertex 2 - Bottom Right
         mesh_ref[2].position = Thsan::vec3f{ rect.z, rect.w, 0.0f };
-        mesh_ref[2].color = Thsan::vec4f{ 1.f, 1.f, 1.f, 1.f };
+        mesh_ref[2].color = col;
         mesh_ref[2].texCoord = Thsan::vec2f{ coord.x + coord.z, coord.y + coord.w };
 
         // Vertex 3 - Bottom Left
         mesh_ref[3].position = Thsan::vec3f{ 0.f, rect.w, 0.0f };
-        mesh_ref[3].color = Thsan::vec4f{ 1.f, 1.f, 1.f, 1.f };
+        mesh_ref[3].color = col;
         mesh_ref[3].texCoord = Thsan::vec2f{ coord.x, coord.y + coord.w };
+
+        std::vector<uint32_t> indices = { 0, 1, 2, 0, 2, 3 };
+        mesh_ref.setIndices(indices);
 
         mesh_ref.generate();
     }
@@ -223,6 +229,7 @@ namespace Thsan {
     void SpriteAnimationImpl::start(unsigned int from, unsigned int to)
     {
         stopped = false;
+        onNewFrame = true;
         this->from = from;
         this->to = to;
         animations[curr]->setCurrIndex(from);
@@ -278,10 +285,10 @@ namespace Thsan {
                     animationIsDone = true;
             }
 
-            tempsAccumuleFrame += dt;
+            tempsAccumuleFrame += speedFactor * dt;
 
             if (!animationIsDone) {
-                tempsAccumuleAnimation += dt;
+                tempsAccumuleAnimation += speedFactor * dt;
             }
         }
 
@@ -291,7 +298,6 @@ namespace Thsan {
             onNewFrame = false;
         }
     }
-
 
     bool SpriteAnimationImpl::hasAnimation(const std::string& name) const
     {
@@ -336,32 +342,93 @@ namespace Thsan {
         return glm::vec2(size.x, size.y);
     }
 
-    void SpriteAnimationImpl::setKeyColor(glm::vec4 color) 
+    void SpriteAnimationImpl::setColor(tsm::Color color)
+    {
+        this->color = color;
+    }
+
+    tsm::Color SpriteAnimationImpl::getColor() const
+    {
+        return color;
+    }
+
+    void SpriteAnimationImpl::setKeyColor(tsm::Color color)
     {
         keyColor = color;
     }
 
-    glm::vec4 SpriteAnimationImpl::getKeyColor() const
+    tsm::Color SpriteAnimationImpl::getKeyColor() const
     {
         return keyColor;
     }
 
      void SpriteAnimationImpl::draw(const RenderTarget& target, RenderStates2D& states) const
     {
-         states.setTexture2D(texture);
+         auto s = states.getShader().lock();
+         s->setVec4("key_color", keyColor.toGlm());
+         s->setMat4("transform", transform->getTransform());
+         s->setTexture2D("default_texture", texture);
          mesh->bind();
          target.draw(*mesh, states);
          mesh->unbind();
     }
 
+     void SpriteAnimationImpl::setPosition(const glm::vec3& position)
+     {
+         transform->setTranslation(position);
+     }
 
-    std::shared_ptr<tsm::Transform> SpriteAnimationImpl::getTransform()
-    {
-        return transform;
-    }
+     glm::vec3 SpriteAnimationImpl::getPosition() const
+     {
+         return transform->getTranslation();
+     }
 
-    const glm::mat4 SpriteAnimationImpl::getTransformMatrix() const
-    {
-        return transform->getTransform();
-    }
+     void SpriteAnimationImpl::setRotation(const glm::vec3& rotate, float angle)
+     {
+         transform->setRotation(rotate, angle);
+     }
+
+     glm::mat4 SpriteAnimationImpl::getRotation() const
+     {
+         return transform->getRotation();
+     }
+
+     void SpriteAnimationImpl::setScale(const glm::vec3& scale)
+     {
+         transform->scale(scale);
+     }
+
+     glm::vec3 SpriteAnimationImpl::getScale() const
+     {
+         return transform->getScale();
+     }
+
+     void SpriteAnimationImpl::setOrigin(const glm::vec3& origin)
+     {
+         transform->setOrigin(origin);
+     }
+
+     glm::vec3 SpriteAnimationImpl::getOrigin() const
+     {
+         return transform->getOrigin();
+     }
+
+     void SpriteAnimationImpl::move(const glm::vec3& offset)
+     {
+         transform->translate(offset);
+     }
+
+     void SpriteAnimationImpl::scale(const glm::vec3& scaleFactor)
+     {
+         transform->scale(scaleFactor);
+     }
+
+     void SpriteAnimationImpl::rotate(const glm::vec3& axis, float angleDegrees)
+     {
+         transform->rotate(axis, angleDegrees);
+     }
+     glm::mat4 SpriteAnimationImpl::getTranform()
+     {
+         return transform->getTransform();
+     }
 }

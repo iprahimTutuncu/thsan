@@ -62,6 +62,8 @@
     <ClInclude Include="src\thsan\graphics\tilemap_impl.h" />
     <ClInclude Include="src\thsan\graphics\view.h" />
     <ClInclude Include="src\thsan\graphics\sprite_animation.h" />
+    <ClInclude Include="src\tsm\math\color.h" />
+    <ClInclude Include="src\thsan\graphics\Transformable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\thsan\game.cpp">
@@ -100,5 +102,6 @@
     <ClCompile Include="src\thsan\graphics\tilemap_impl.cpp" />
     <ClCompile Include="src\thsan\graphics\view.cpp" />
     <ClCompile Include="src\thsan\graphics\sprite_animation.cpp" />
+    <ClCompile Include="src\tsm\math\color.cpp" />
   </ItemGroup>
 </Project>

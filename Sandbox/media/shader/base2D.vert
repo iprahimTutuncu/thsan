@@ -9,13 +9,14 @@ layout (location = 5) in vec4 color;
 uniform mat4 projection;               // Projection matrix (for orthographic projection)
 uniform mat4 view;                     // View matrix (for camera transformations)
 uniform mat4 model;                    
+uniform mat4 transform;                    
 
 out vec2 fragment_texCoord;                    // Output variable to pass texture coordinates to fragment shader
 out vec4 vertex_color;                       // Output variable to pass color to fragment shader
 
 void main() {
 
-    gl_Position = projection * view * model * vec4(position.xy, 0.0 , 1.0);
+    gl_Position = projection * view * model * transform * vec4(position.xy, 0.0 , 1.0);
 
     fragment_texCoord = texCoord.xy;
 

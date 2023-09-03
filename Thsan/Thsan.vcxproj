@@ -19,6 +19,8 @@
     <ClInclude Include="src\platform\vulkan\vk_initializer.h" />
     <ClInclude Include="src\platform\vulkan\vk_swapchain.h" />
     <ClInclude Include="src\manager\log_manager.h" />
+    <ClInclude Include="src\thsan\graphics\Transformable.h" />
+    <ClInclude Include="src\tsm\math\color.h" />
     <ClInclude Include="src\thsan\graphics\drawable.h" />
     <ClInclude Include="src\thsan\graphics\sprite_animation.h" />
     <ClInclude Include="src\thsan\graphics\tilemap.h" />
@@ -70,6 +72,7 @@
     <ClCompile Include="src\platform\vulkan\vk_initializer.cpp" />
     <ClCompile Include="src\platform\vulkan\vk_swapchain.cpp" />
     <ClCompile Include="src\manager\log_manager.cpp" />
+    <ClCompile Include="src\tsm\math\color.cpp" />
     <ClCompile Include="src\thsan\graphics\sprite_animation.cpp" />
     <ClCompile Include="src\thsan\graphics\tilemap.cpp" />
     <ClCompile Include="src\thsan\graphics\tilemap_impl.cpp" />

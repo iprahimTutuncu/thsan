@@ -13,16 +13,6 @@ namespace Thsan {
         return shader;
     }
 
-    std::weak_ptr<Texture2D> Thsan::RenderStates2DImpl::getTexture2D() const
-    {
-        return texture2D;
-    }
-
-    void Thsan::RenderStates2DImpl::setTexture2D(std::weak_ptr<Texture2D> texture2D)
-    {
-        this->texture2D = texture2D;
-    }
-
     void Thsan::RenderStates2DImpl::setShader(std::weak_ptr<Shader> shader)
     {
         this->shader = shader;
@@ -41,15 +31,22 @@ namespace Thsan {
     void RenderStates2DImpl::bind() const
     {
         const std::shared_ptr<Shader> tmp_shader = getShader().lock();
-        const std::shared_ptr<Texture2D> tmp_texture = getTexture2D().lock();
         const std::shared_ptr<View> tmp_view = view.lock();
         const std::shared_ptr<tsm::Transform> tmp_transform = transform.lock();
 
         tmp_shader->bind();
-        tmp_shader->setTexture2D("texture_default", tmp_texture);
-        tmp_shader->setMat4("model", tmp_transform->getTransform());
 
-        tmp_shader->setMat4("view", tmp_view->getViewMatrix());
+        if(tmp_transform)
+            tmp_shader->setMat4("model", tmp_transform->getTransform());
+        else
+            tmp_shader->setMat4("model", glm::identity<glm::mat4>());
+
+        if (tmp_view)
+            tmp_shader->setMat4("view", tmp_view->getViewMatrix());
+        else {
+            tmp_shader->setMat4("view", glm::identity<glm::mat4>());
+            TS_CORE_WARN("in RenderStates2DImpl::bind(), no view was set, defaulting to identity matrix.");
+        }
         tmp_shader->setMat4("projection", tmp_view->getProjectionMatrix());
     }
 
@@ -63,20 +60,12 @@ namespace Thsan {
     {
         return shader;
     }
-    inline std::weak_ptr<Texture2D> RenderStates3DImpl::getTexture2D() const
-    {
-        return texture2D;
-    }
 
     inline std::weak_ptr<tsm::AbstractCamera> RenderStates3DImpl::getCamera() const
     {
         return camera;
     }
 
-    inline void RenderStates3DImpl::setTexture2D(std::weak_ptr<Texture2D> texture2D)
-    {
-        this->texture2D = texture2D;
-    }
 
     inline void RenderStates3DImpl::setShader(std::weak_ptr<Shader> shader)
     {
@@ -90,10 +79,8 @@ namespace Thsan {
     void RenderStates3DImpl::bind() const
     {
         const std::shared_ptr<Shader> tmp_shader = getShader().lock();
-        const std::shared_ptr<Texture2D> tmp_texture = getTexture2D().lock();
 
         tmp_shader->bind();
-        tmp_shader->setTexture2D("texture_default", tmp_texture);
         tmp_shader->setCamera(camera);
         tmp_shader->setMat4("transform", transform);
     }

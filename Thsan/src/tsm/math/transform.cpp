@@ -39,12 +39,10 @@ namespace tsm {
         scale_matrix = glm::scale(glm::mat4(1.0f), scale);
     }
 
-    void TransformImpl::setRotation(const glm::vec3& rotate) {
-        // Set the rotation matrix directly
-        glm::mat4 x_rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotate.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        glm::mat4 y_rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotate.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 z_rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotate.z), glm::vec3(0.0f, 0.0f, 1.0f));
-        rotation_matrix = z_rotation * y_rotation * x_rotation;
+    void TransformImpl::setRotation(const glm::vec3& rotate, float angle) {
+        glm::quat rotation_quad = glm::angleAxis(glm::radians(angle), rotate);
+        rotation_matrix = glm::mat4_cast(rotation_quad);
+
     }
 
     void TransformImpl::setOrigin(const glm::vec3& origin)
@@ -53,39 +51,32 @@ namespace tsm {
         this->translate_back_matrix = glm::translate(glm::mat4(1.0f), origin);
     }
 
-    void TransformImpl::rotate(const glm::vec3& rotate) {
-        // Apply additional rotation to the existing rotation matrix
-        glm::mat4 x_rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotate.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        glm::mat4 y_rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotate.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 z_rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotate.z), glm::vec3(0.0f, 0.0f, 1.0f));
-        rotation_matrix = z_rotation * y_rotation * x_rotation * rotation_matrix;
+    glm::vec3 TransformImpl::getTranslation()
+    {
+        return glm::vec3(transform_matrix[3]);
     }
 
-    void TransformImpl::setTransform(const glm::mat4& transform)
+    glm::vec3 TransformImpl::getScale()
     {
-        //maybe have the individual compoenent in th set transform
-        //a meidter, voir SFML comment y font
+        glm::vec3 scale;
+        scale.x = scale_matrix[0][0];
+        scale.y = scale_matrix[1][1];
+        scale.z = scale_matrix[2][2];
+        return scale;
+    }
 
-        transform_matrix = transform_matrix;
-        
-        glm::vec3 translation, skew, scale;
-        glm::quat rotation_quat;
-        glm::vec4 perspective;
-        glm::decompose(transform, scale, rotation_quat, translation, skew, perspective);
+    glm::mat4 TransformImpl::getRotation()
+    {
+        return rotation_matrix;
+    }
 
-        // Update local variables
-        translation_matrix = glm::translate(glm::mat4(1.0f), translation);
-        scale_matrix = glm::scale(glm::mat4(1.0f), scale);
+    glm::vec3 TransformImpl::getOrigin()
+    {
+        return glm::vec3(transform_matrix[3]);
+    }
 
-        // Calculate rotation matrix from the quaternion
-        rotation_matrix = glm::mat4_cast(rotation_quat);
-
-        // Set the transform matrix
-        transform_matrix = transform;
-
-        translate_to_origin_matrix = glm::translate(glm::mat4(1.0f), -translation);
-        translate_back_matrix = glm::translate(glm::mat4(1.0f), translation);
-
+    void TransformImpl::rotate(const glm::vec3& rotate, float angle) {
+        rotation_matrix = glm::mat4_cast(rotation_quad * glm::angleAxis(glm::radians(angle), rotate));
     }
 
     const glm::mat4 TransformImpl::getTransform() {
@@ -94,7 +85,6 @@ namespace tsm {
         transform_matrix = translation_matrix * R * scale_matrix;
         return transform_matrix;
     }
-
 
     std::shared_ptr<Transform> Transform::create()
     {

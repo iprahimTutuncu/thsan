@@ -26,11 +26,8 @@ namespace Thsan {
 	class THSAN_API RenderStates2D: RenderStates {
 	public:
 		virtual inline std::weak_ptr<Shader> getShader() const = 0;
-		virtual inline std::weak_ptr<Texture2D> getTexture2D() const = 0;
-		virtual inline void setTexture2D(std::weak_ptr<Texture2D> texture2D) = 0;
 		virtual inline void setShader(std::weak_ptr<Shader> shader) = 0;
 		virtual inline void setTransform(std::weak_ptr<tsm::Transform> transform) = 0;
-
 		virtual inline void setView(std::weak_ptr<View> view) = 0;
 
 		// Hérité via RenderStates
@@ -41,10 +38,8 @@ namespace Thsan {
 	class THSAN_API RenderStates3D : RenderStates {
 	public:
 		virtual inline std::weak_ptr<Shader> getShader() const = 0;
-		virtual inline std::weak_ptr<Texture2D> getTexture2D() const = 0;
 		virtual inline std::weak_ptr<tsm::AbstractCamera> getCamera() const = 0;
 
-		virtual inline void setTexture2D(std::weak_ptr<Texture2D> texture2D) = 0;
 		virtual inline void setShader(std::weak_ptr<Shader> shader) = 0;
 		virtual inline void setCamera(std::weak_ptr<tsm::AbstractCamera> camera) = 0;
 		virtual inline void setTransform(glm::mat4 transform) = 0;
@@ -58,10 +53,6 @@ namespace Thsan {
 	public:
 		// Inherited via RenderStates2D
 		virtual inline std::weak_ptr<Shader> getShader() const override;
-
-		virtual inline std::weak_ptr<Texture2D> getTexture2D() const override;
-
-		virtual inline void setTexture2D(std::weak_ptr<Texture2D> texture2D) override;
 
 		virtual inline void setShader(std::weak_ptr<Shader> shader) override;
 
@@ -88,11 +79,7 @@ namespace Thsan {
 		// Inherited via RenderStates3D
 		virtual inline std::weak_ptr<Shader> getShader() const override;
 
-		virtual inline std::weak_ptr<Texture2D> getTexture2D() const override;
-
 		virtual inline std::weak_ptr<tsm::AbstractCamera> getCamera() const override;
-
-		virtual inline void setTexture2D(std::weak_ptr<Texture2D> texture2D) override;
 
 		virtual inline void setShader(std::weak_ptr<Shader> shader) override;
 
